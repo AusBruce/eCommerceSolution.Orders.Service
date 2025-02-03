@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using eCommerce.OrdersMicroservice.DataAccessLayer.RepositoryContracts;
+using eCommerce.OrdersMicroservie.DataAccessLayer.Repositories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
@@ -9,7 +11,6 @@ public static class DependencyInjection
     public static IServiceCollection AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
     {
         //TO DO: Add data access layer services into the IoC container
-
         string connectionStringTemplate = configuration.GetConnectionString("MongoDB")!;
         string connectionString = connectionStringTemplate
           .Replace("$MONGO_HOST", Environment.GetEnvironmentVariable("MONGODB_HOST"))
@@ -23,6 +24,8 @@ public static class DependencyInjection
             return client.GetDatabase("OrdersDatabase");
         });
 
+
+        services.AddScoped<IOrdersRepository, OrdersRepository>();
 
         return services;
     }
